@@ -1,0 +1,87 @@
+.gallery__image-item {
+  display: block;
+  width: calc((100% - 30px * 2) / 3);
+  // width: calc((100% - 30px * 3) / 4);
+  margin-right: 30px;
+  margin-bottom: 30px;
+  transition: 1s;
+
+//   border: 1px solid;
+  border: none;
+
+  &:hover,
+  &:focus-within,
+  &:active {
+    box-shadow: 1px 4px 6px rgba(0, 0, 0, 0.16), 0px 4px 4px rgba(0, 0, 0, 0.06),
+    0px 1px 1px rgba(0, 0, 0, 0.12);
+    transition: margin-right 2s;
+  }
+
+  &:nth-child(4n) {
+    margin-right: 0px;
+  }
+}
+
+.image-wrap {
+    display: inline-block;
+    overflow: hidden;
+
+    &:hover {
+        transition: 1s;
+    }
+}
+
+.image-wrap img {
+    transition: 1s; 
+    display: block;
+    &:hover{
+      transform: scale(1.2); 
+    }
+}
+
+img {
+  width:100%;
+}
+
+.photo-card {
+    display: block;
+    
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    margin-bottom: 9px;
+}
+
+// .stats-item {
+    // margin-right: 5px;
+// }
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 18px;  /* Preferred icon size */
+  color: dimgrey;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  margin-right: 5px;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
