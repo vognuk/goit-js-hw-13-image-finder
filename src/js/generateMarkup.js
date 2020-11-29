@@ -7,155 +7,114 @@ import './form.js';
 // import { notification } from './notification';
 // import searchValue from './form';
 import { debounce, filter, bind } from 'lodash';
-
 // const debounce     = require('lodash.debounce');
 // const formOfSearch = require('./form.js').default;
 
-export default class GenerateMarkup {
-  constructor({ inputElement, imagesBlock,  searchForm, button, storage}) { //, images
-    let pagesCount = 1;
 
+export default class GenerateMarkup {
+  constructor({ inputElement, imagesBlock, searchForm, button, searchObject }) { 
     this.refs = {
       input:        document.querySelector(inputElement),
       imagesMarkup: document.querySelector(imagesBlock),
       searchForm:   document.querySelector(searchForm),
       button:       document.querySelector(button),
-      storage:      storage,
-    }
-  
+      searchObject: searchObject,
+    };
+ 
+    this.onSearch             = this.onSearch.bind(this);
+    this.appendImagesMarkUp = this.appendImagesMarkUp.bind(this);
+    this.loadMoreImagesMarkUp = this.loadMoreImagesMarkUp.bind(this);
+    
     this.init();
   }
   
   init() {
-    this.debounce = debounce(this.onSearch.bind(this), 500);
+    this.debounce = debounce(this.onSearch, 500);
     this.refs.input.addEventListener('input', this.debounce);
     this.refs.button.addEventListener('click', this.loadMoreImagesMarkUp);
-   
   }
+  
+  onSearch(event) { 
+    if ((this.refs.searchObject.pagesCount = 1)) {
+      this.clearImagesMarkUp();
+      this.refs.searchObject.query = event.target.value.trim();
 
-  onSearch(event) {   
-    const fetchImage = new FetchImage(this.pagesCount);
-
-    if (this.pagesCount = 1) {
-      this.clearImagesMarkUp.apply(this); 
-      fetchImage.query = event.target.value.trim();
-      
-      if (fetchImage.query === '') {
-        this.clearInputField.bind(this);
+      if (this.refs.searchObject.query === '') {
+        this.clearInputField();
         return;
       }
     }
-    
-    return fetchImage.getPageOfImagesByName()
-      .then(this.appendImagesMarkUp.bind(this))
-      .then(this.clearInputField.bind(this))
-      .catch() //this.onCatchError.bind(this)
+   
+    this.fetchReturn();
   }
-
+  
   loadMoreImagesMarkUp(event) {
-    this.pagesCount = 2;
     if (document.querySelector('.gallery').children.length > 0) {
-      this.pagesCount += 1;
-      // console.log(this.refs.imagesMarkup.children.length);
-      // localStorage.setItem('pagesCount', pagesCount);
-      // return;
+      this.refs.searchObject.pagesCount += 1;
     } else {
-        this.clearInputField.bind(this);
+      this.clearInputField();
       return;
-    }
-    
-    const fetchImage = new FetchImage(this.pagesCount);//this.pagesCount, localStorage.getItem('searchValue')
-    console.log(`Load more pagesCount: ${this.pagesCount}`);
-    // console.log(this.refs.imagesMarkup.children.length);
-    
-    fetchImage.getPageOfImagesByName() //this.pagesCount, searchValueForLoadMoreMethod
-      .then(this.appendImagesMarkUp.bind(this))
-      .then(this.clearInputField.bind(this))
-      .catch() //this.onCatchError.bind(this)
-  }
+    } 
 
-  viewImageByIntersectionObserver() {
-    let options = {
-      root:       document.querySelector(this.refs.imagesMarkup),
-      rootMargin: '0px',
-      threshold:  1.0
-    }
-    let observer = new IntersectionObserver(showImagesList, options);
-    this.onSearch();
+    this.fetchReturn();
+  } 
+  
+  fetchReturn() {
+    return this.refs.searchObject
+      .getPageOfImagesByName() //this.pagesCount, searchValueForLoadMoreMethod
+      .then(this.appendImagesMarkUp)
+      .then(this.clearInputField)
+      .catch(); //this.onCatchError.bind(this)
   }
-
+  
   appendImagesMarkUp(images) {
     let { total, totalHits, hits } = images;
     console.log(hits);
-
-    if (this.pagesCount = 1) { 
-      this.clearImagesMarkUp();
-    }
-
-    this.showImages(hits);
-
-// //     if(countries.find (code => code.status === '404')){
-// //       return notification();
-// //     }
-
-//     // if (true) {
-//     //   this. imagesMarkup(images);
-//     //   return;
-//     // }
-    
-    // if (length >= 2 && length <= 10) {
-    //   this.clearImagesMarkUp.apply(this);
-    //   // this.showCountryListDropdown(countries);
-    //   this.showImagesList(hits);
-    //   return;
+    // if ((this.pagesCount = 1)) {
+    //   this.clearImagesMarkUp();
     // }
-    
-// //     if (length > 10) {
-// //       notification();
-// //       return;
-// //     }
+    this.showImages(hits);
   }
-
-  showImages(hits) {  
-    this.refs.imagesMarkup.insertAdjacentHTML('beforeend', galleryCardTpl(hits));
-    console.log(this.refs.imagesMarkup.children);
-    console.log(this.refs.imagesMarkup.children.length);
-  }
-
-// //   showCountryListDropdown(countries) {
-// //     this.refs.countriesMarkup.insertAdjacentHTML('beforeend', countryListTpl(countries));
-    
-// //     let inputCountry = document.querySelector('.js-search');
-// //     inputCountry.setAttribute("list", "countries-list");
-// //   }
-
-  showImagesList(hits) {
-      // let { singleImage } = hints;
-     if (this.refs.imagesMarkup.children.length > 0) {
-       this.pagesCount += 1;
-       this.onSearch;
-    }
-
-    this.refs.searchBlock.insertAdjacentHTML('beforeend', countriesListTpl(hits)); 
-
-    // const lazyImages = document.querySelectorAll('img[loading="lazy"]');
   
-    // lazyImages.forEach(image => {
-    //   image.addEventListener('load', onImageLoaded, { once: true });
-    // }); 
+  showImages(hits) {
+   this.refs.imagesMarkup.insertAdjacentHTML('beforeend', galleryCardTpl(hits));
+   console.log(hits);
   }
-
+  
+  showImagesList(hits) {
+  // let { singleImage } = hints;
+  if (this.refs.imagesMarkup.children.length > 0) {
+    this.pagesCount += 1;
+    this.loadMoreImagesMarkUp;
+  }
+  this.refs.searchBlock.insertAdjacentHTML('beforeend', countriesListTpl(hits));
+  // const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+  // lazyImages.forEach(image => {
+  //   image.addEventListener('load', onImageLoaded, { once: true });
+  // });
+  }
+  
   clearImagesMarkUp() {
     return this.refs.imagesMarkup.innerHTML = '';
   }
-
+  
   clearInputField() {
-    return this.refs.input.value = '';
+    // return this.refs.input.value = '';
   }
+  
+//  viewImageByIntersectionObserver() {
+//   let options = {
+//    root: document.querySelector(this.refs.imagesMarkup),
+//    rootMargin: '0px',
+//    threshold: 1.0,
+//   };
+//   let observer = new IntersectionObserver(showImagesList, options);
+//   this.onSearch();
+//  }
 
-// //   onCatchError() {
-// //     this.clearInputField();
-// //     notification();
-// //     return;
-// //   }
+ // //   onCatchError() {
+ // //     this.clearInputField();
+ // //     notification();
+ // //     return;
+ // //   }
 }

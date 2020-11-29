@@ -7,14 +7,15 @@ import '../css/main.min.css';
 import GenerateMarkup from './js/generateMarkup.js';
 import FetchImage from './js/fetchImage.js'
 
-// let searchValue = localStorage.getItem('searchValue');
+
+let fetchImage = new FetchImage(1, "");
 
 const renderMarkup = new GenerateMarkup(
   {
   inputElement: '.input',
   imagesBlock:  '.gallery',
   searchForm:   '.search-form',
-  button: '[data-load-more]',
-  storage: localStorage.getItem('searchValue'),
+  button:       '[data-load-more]',
+  searchObject: fetchImage,
   } 
 );
