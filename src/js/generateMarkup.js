@@ -12,53 +12,86 @@ import { debounce, filter, bind } from 'lodash';
 // const formOfSearch = require('./form.js').default;
 
 export default class GenerateMarkup {
-  constructor({ inputElement, imagesBlock,  searchForm }) { //, images
+  constructor({ inputElement, imagesBlock,  searchForm, button, storage}) { //, images
+    let pagesCount = 1;
+
     this.refs = {
-      input:             document.querySelector(inputElement),
-      imagesMarkup:      document.querySelector(imagesBlock),
-      searchForm:        document.querySelector(searchForm),
-      // imagesPartialList: document.querySelector(images),
+      input:        document.querySelector(inputElement),
+      imagesMarkup: document.querySelector(imagesBlock),
+      searchForm:   document.querySelector(searchForm),
+      button:       document.querySelector(button),
+      storage:      storage,
     }
+  
     this.init();
   }
   
   init() {
     this.debounce = debounce(this.onSearch.bind(this), 500);
     this.refs.input.addEventListener('input', this.debounce);
+    this.refs.button.addEventListener('click', this.loadMoreImagesMarkUp);
+   
   }
 
-  onSearch(event) {
+  onSearch(event) {   
+    const fetchImage = new FetchImage(this.pagesCount);
 
-    // if (images.filter( total => total = )) {
-
-    // };
-
-    let pagesCount = 1;
-    const fetchImage = new FetchImage();
-
-    console.log('При каждом последующем запросе page увеличивается на 1, а при поиске по новому ключевому слову необходимо сбрасывать его значение в 1.');
-        
-    this.clearImagesMarkUp.apply(this); 
-    fetchImage.query = event.target.value.trim();
-    
-    if (fetchImage.query === '') {
-      this.clearInputField.bind(this);
-      return;
+    if (this.pagesCount = 1) {
+      this.clearImagesMarkUp.apply(this); 
+      fetchImage.query = event.target.value.trim();
+      
+      if (fetchImage.query === '') {
+        this.clearInputField.bind(this);
+        return;
+      }
     }
-
-    fetchImage.getPageOfImagesByName()
+    
+    return fetchImage.getPageOfImagesByName()
       .then(this.appendImagesMarkUp.bind(this))
       .then(this.clearInputField.bind(this))
-      .catch(this.onCatchError.bind(this))
+      .catch() //this.onCatchError.bind(this)
+  }
+
+  loadMoreImagesMarkUp(event) {
+    this.pagesCount = 2;
+    if (document.querySelector('.gallery').children.length > 0) {
+      this.pagesCount += 1;
+      // console.log(this.refs.imagesMarkup.children.length);
+      // localStorage.setItem('pagesCount', pagesCount);
+      // return;
+    } else {
+        this.clearInputField.bind(this);
+      return;
+    }
     
-    // console.log(images);
+    const fetchImage = new FetchImage(this.pagesCount);//this.pagesCount, localStorage.getItem('searchValue')
+    console.log(`Load more pagesCount: ${this.pagesCount}`);
+    // console.log(this.refs.imagesMarkup.children.length);
+    
+    fetchImage.getPageOfImagesByName() //this.pagesCount, searchValueForLoadMoreMethod
+      .then(this.appendImagesMarkUp.bind(this))
+      .then(this.clearInputField.bind(this))
+      .catch() //this.onCatchError.bind(this)
+  }
+
+  viewImageByIntersectionObserver() {
+    let options = {
+      root:       document.querySelector(this.refs.imagesMarkup),
+      rootMargin: '0px',
+      threshold:  1.0
+    }
+    let observer = new IntersectionObserver(showImagesList, options);
+    this.onSearch();
   }
 
   appendImagesMarkUp(images) {
-    // const { length } = images;
     let { total, totalHits, hits } = images;
-     console.log(hits);
-    this.clearImagesMarkUp();
+    console.log(hits);
+
+    if (this.pagesCount = 1) { 
+      this.clearImagesMarkUp();
+    }
+
     this.showImages(hits);
 
 // //     if(countries.find (code => code.status === '404')){
@@ -70,12 +103,12 @@ export default class GenerateMarkup {
 //     //   return;
 //     // }
     
-    if (length >= 2 && length <= 10) {
-      this.clearImagesMarkUp.apply(this);
-      // this.showCountryListDropdown(countries);
-      this.showImagesList(hits);
-      return;
-    }
+    // if (length >= 2 && length <= 10) {
+    //   this.clearImagesMarkUp.apply(this);
+    //   // this.showCountryListDropdown(countries);
+    //   this.showImagesList(hits);
+    //   return;
+    // }
     
 // //     if (length > 10) {
 // //       notification();
@@ -83,9 +116,10 @@ export default class GenerateMarkup {
 // //     }
   }
 
-  showImages(hits) {
-    // document.querySelector(".countries__geted-list").remove();
+  showImages(hits) {  
     this.refs.imagesMarkup.insertAdjacentHTML('beforeend', galleryCardTpl(hits));
+    console.log(this.refs.imagesMarkup.children);
+    console.log(this.refs.imagesMarkup.children.length);
   }
 
 // //   showCountryListDropdown(countries) {
@@ -96,7 +130,19 @@ export default class GenerateMarkup {
 // //   }
 
   showImagesList(hits) {
-    this.refs.searchBlock.insertAdjacentHTML('beforeend', countriesListTpl(hits));  
+      // let { singleImage } = hints;
+     if (this.refs.imagesMarkup.children.length > 0) {
+       this.pagesCount += 1;
+       this.onSearch;
+    }
+
+    this.refs.searchBlock.insertAdjacentHTML('beforeend', countriesListTpl(hits)); 
+
+    // const lazyImages = document.querySelectorAll('img[loading="lazy"]');
+  
+    // lazyImages.forEach(image => {
+    //   image.addEventListener('load', onImageLoaded, { once: true });
+    // }); 
   }
 
   clearImagesMarkUp() {
