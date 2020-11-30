@@ -13,6 +13,7 @@ let fetchImage = new FetchImage(1, "");
 const renderMarkup = new GenerateMarkup(
   {
   inputElement: '.input',
+  galleryBlock: '.gallery__block',
   imagesBlock:  '.gallery',
   searchForm:   '.search-form',
   button:       '[data-load-more]',
