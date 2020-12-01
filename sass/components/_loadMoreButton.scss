@@ -1,0 +1,44 @@
+.gallery__load-more-btn {
+  padding: 2px 15px;
+  margin-bottom: 10px;
+
+  background-color: #ffffff;
+  border-radius: 5px;
+  border-color: #000;
+  border-width: 2px;
+
+  & p { 
+ 
+    font-size: 1.2em;
+    // color: rgba(0,0,0,0);
+    // left: 20px;
+    // top: 4px;
+    // text-align: left;
+    // margin-left: 0px;
+    opacity: 1;
+
+    animation: reveal 7s;
+    animation-iteration-count: infinite;
+  }
+}
+
+@keyframes reveal {
+	0% {
+		opacity: 0;
+		width: 135px;
+	}
+	20% {
+		opacity: 1;
+		width: 135px;
+	}
+	30% {
+		width: 135px;
+	}
+	80% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		width: 135px;
+	}
+}

@@ -7,7 +7,7 @@ export default class FetchImage {
     this.pagesCount = pagesCount;
   }
 
-  getPageOfImagesByName(pagesCount, searchValue) { //, imageRequestValue
+  getPageOfImagesByName(pagesCount, searchValue) {
     if (pagesCount > 1) {
       searchValue = this.localStorage.getItem(searchValue);
     } else {

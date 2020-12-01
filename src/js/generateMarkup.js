@@ -1,26 +1,28 @@
-import FetchImage from './fetchImage';
-// import countryListTpl   from '../templates/dropdown.hbs';
-// import countriesListTpl from '../templates/countries-list.hbs';
+import FetchImage     from './fetchImage';
 import galleryCardTpl from '../templates/gallery-card.hbs';
-import buttonTpl from '../templates/button.hbs';
+import buttonTpl      from '../templates/loadMoreButton.hbs';
 import formTpl from '../templates/form.hbs';
 import './form.js';
+import { debounce, filter, bind } from 'lodash';
+
+// import preloaderTpl from '../templates/preloader.hbs';
 // import { notification } from './notification';
 // import searchValue from './form';
-import { debounce, filter, bind } from 'lodash';
 // const debounce     = require('lodash.debounce');
 // const formOfSearch = require('./form.js').default;
+// import * as fetchImage from './js/apiService.js';
+// import * as basicLightbox from 'basiclightbox';
 
 
 export default class GenerateMarkup {
-  constructor({ inputElement, galleryBlock, imagesBlock, searchForm, button, searchObject }) { 
+  constructor({ inputElement, galleryBlock, imagesBlock, searchForm, loadMoreButton, searchObject }) { 
     this.refs = {
-      input:        document.querySelector(inputElement),
-      galleryBlock: document.querySelector(galleryBlock),
-      imagesMarkup: document.querySelector(imagesBlock),
-      searchForm:   document.querySelector(searchForm),
-      button:       document.querySelector(button),
-      searchObject: searchObject,
+      input:          document.querySelector(inputElement),
+      galleryBlock:   document.querySelector(galleryBlock),
+      imagesMarkup:   document.querySelector(imagesBlock),
+      searchForm:     document.querySelector(searchForm),
+      loadMoreButton: document.querySelector(loadMoreButton),
+      searchObject:   searchObject,
     };
  
     this.onSearch             = this.onSearch.bind(this);
@@ -34,16 +36,12 @@ export default class GenerateMarkup {
     this.debounce = debounce(this.onSearch, 500);
     this.refs.input.addEventListener('input', this.debounce);
   }
-
-  // appendForm() {
-  //   this.refs.galleryBlock.insertAdjacentHTML('afterbegin', buttonTpl());
-  // }
   
-  onSearch(event) {
-    if ((this.refs.searchObject.pagesCount = 1)) {
+  onSearch(event) { 
+    if (this.refs.searchObject.pagesCount = 1) {
       this.clearImagesMarkUp();
       this.refs.searchObject.query = event.target.value.trim();
-      // this.removeLoadMoreBtn();
+      this.removeLoadMoreBtn();
 
       if (this.refs.searchObject.query === '') {
         this.clearInputField();
@@ -52,27 +50,42 @@ export default class GenerateMarkup {
     }
    
     this.fetchReturn();
-
-    // if (document.querySelector('.gallery').children.length > 12) { 
-      this.appendLoadMoreBtn();
-    // }
-
-    // console.log(document.getElementsByClassName('gallery__image-item').children.length);
+    this.appendLoadMoreBtn();
   }
+
+  
+  // showBigImage(hits) {
+  //   let {largeImageURL} = hits;
+  //   const instance = basicLightbox.create(`<img src="assets/images/image.png" width="800" height="600">`);
+  //   instance.show();
+  // }
   
   loadMoreImagesMarkUp(event) {
+    
     if (document.querySelector('.gallery').children.length > 0) {
       this.refs.searchObject.pagesCount += 1;
     } else {
       this.clearInputField('gallery__load-more-btn');
       return;
     } 
-
+    
     this.fetchReturn();
+   
+    // this.refs.galleryBlock.scrollTo(0, window.innerHeight);
+
+    // if (!document.querySelector('#cube-loader')) {
+    //   this.refs.galleryBlock.insertAdjacentHTML('afterbegin', preloaderTpl());
+    // }
+
+    // this.removePreloader();
   } 
+
+  // removePreloader() {
+  //   window.onload = document.querySelector('#cube-loader').innerHTML = '';
+  // }
   
   fetchReturn() {
-    return this.refs.searchObject
+    return window.onload = this.refs.searchObject
       .getPageOfImagesByName() //this.pagesCount, searchValueForLoadMoreMethod
       .then(this.appendImagesMarkUp)
       .then(this.clearInputField)
@@ -83,16 +96,16 @@ export default class GenerateMarkup {
     if (!document.querySelector('[data-load-more]')) {
       this.refs.galleryBlock.insertAdjacentHTML('beforeend', buttonTpl());
     }
-    //чому через this.refs.button не додається слухач події 'click'?
     document.querySelector('[data-load-more]').addEventListener('click', this.loadMoreImagesMarkUp);
+    console.log(document.documentElement.clientHeight);
   }
- 
+
+  removeLoadMoreBtn() {
+    return this.refs.imagesMarkup.innerHTML = '';
+  }
+
   appendImagesMarkUp(images) {
     let { total, totalHits, hits } = images;
-    console.log(hits);
-    // if ((this.pagesCount = 1)) {
-    //   this.clearImagesMarkUp();
-    // }
     this.showImages(hits);
   }
   
@@ -106,10 +119,6 @@ export default class GenerateMarkup {
       this.loadMoreImagesMarkUp;
     }
     this.refs.searchBlock.insertAdjacentHTML('beforeend', countriesListTpl(hits));
-    // const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    // lazyImages.forEach(image => {
-    //   image.addEventListener('load', onImageLoaded, { once: true });
-    // });
   }
   
   clearImagesMarkUp() {
@@ -119,16 +128,6 @@ export default class GenerateMarkup {
   clearInputField() {
     return this.refs.input.value = '';
   }
-  
-//  viewImageByIntersectionObserver() {
-//   let options = {
-//    root: document.querySelector(this.refs.imagesMarkup),
-//    rootMargin: '0px',
-//    threshold: 1.0,
-//   };
-//   let observer = new IntersectionObserver(showImagesList, options);
-//   this.onSearch();
-//  }
 
  // //   onCatchError() {
  // //     this.clearInputField();

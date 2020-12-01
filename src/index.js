@@ -6,17 +6,17 @@ import '../css/main.min.css';
 // import '@pnotify/core/dist/BrightTheme.css';
 import GenerateMarkup from './js/generateMarkup.js';
 import FetchImage from './js/fetchImage.js'
+import parameters from "./js/apiService.js";
 
-
-let fetchImage = new FetchImage(1, "");
+const fetchImage = new FetchImage({ parameters });
 
 const renderMarkup = new GenerateMarkup(
   {
-  inputElement: '.input',
-  galleryBlock: '.gallery__block',
-  imagesBlock:  '.gallery',
-  searchForm:   '.search-form',
-  button:       '[data-load-more]',
-  searchObject: fetchImage,
+    inputElement: '.input',
+    galleryBlock: '.gallery__block',
+    imagesBlock:  '.gallery',
+    searchForm:   '.search-form',
+    loadMoreButton: '[data-load-more]',
+    searchObject: fetchImage,
   } 
 );
