@@ -10,9 +10,9 @@ const fetchImage = new FetchImage({ parameters });
 
 const renderMarkup = new GenerateMarkup(
   {
-    inputElement: '.input',
+    input: '.input',
     galleryBlock: '.gallery__block',
-    imagesBlock:  '.gallery',
+    gallery:  '.gallery',
     searchForm:   '.search-form',
     loadMoreButton: '[data-load-more]',
     searchObject: fetchImage,

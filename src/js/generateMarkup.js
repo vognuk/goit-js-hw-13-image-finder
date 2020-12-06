@@ -1,16 +1,14 @@
-import FetchImage     from './fetchImage';
 import galleryCardTpl from '../templates/gallery-card.hbs';
-import formTpl from '../templates/form.hbs';
 import './form.js';
 import { debounce, bind } from 'lodash';
-import './loadMoreButton.js';
+// import './loadMoreButton.js';
 
 export default class GenerateMarkup {
-  constructor({ inputElement, galleryBlock, imagesBlock, searchForm, loadMoreButton, searchObject }) { 
+  constructor({ input, galleryBlock, gallery, searchForm, loadMoreButton, searchObject }) { 
     this.refs = {
-      input:          document.querySelector(inputElement),
+      input:          document.querySelector(input),
       galleryBlock:   document.querySelector(galleryBlock),
-      imagesMarkup:   document.querySelector(imagesBlock),
+      gallery:        document.querySelector(gallery),
       searchForm:     document.querySelector(searchForm),
       loadMoreButton: document.querySelector(loadMoreButton),
       searchObject:   searchObject,
@@ -27,7 +25,7 @@ export default class GenerateMarkup {
     this.debounce = debounce(this.onSearch, 500);
     this.refs.input.addEventListener('input', this.debounce);
     this.refs.searchObject.pagesCount = 1;
-    document.querySelector('[data-load-more]').addEventListener('click', this.loadMoreImagesMarkUp);
+    this.refs.loadMoreButton.addEventListener('click', this.loadMoreImagesMarkUp);
     this.refs.loadMoreButton.setAttribute('hidden', 'true');
   }
   
@@ -47,6 +45,8 @@ export default class GenerateMarkup {
  
   loadMoreImagesMarkUp() {
     this.fetchReturn();
+    this.refs.loadMoreButton.disabled = true;
+    setTimeout(this.refs.loadMoreButton.disabled = false, 500);
   } 
 
   fetchReturn() {
@@ -62,7 +62,7 @@ export default class GenerateMarkup {
     // console.log(totalHits);
     this.refs.searchObject.pagesCount += 1;
     this.showImages(hits);
-    localStorage.setItem('fetchedLength', this.refs.imagesMarkup.children.length);
+    localStorage.setItem('fetchedLength', this.refs.gallery.children.length);
 
     if (parseInt(localStorage.getItem('fetchedLength')) >= totalHits) {
       this.refs.loadMoreButton.setAttribute('hidden', 'true');
@@ -71,12 +71,12 @@ export default class GenerateMarkup {
   }
   
   showImages(hits) {
-    this.refs.imagesMarkup.insertAdjacentHTML('beforeend', galleryCardTpl(hits));
+    this.refs.gallery.insertAdjacentHTML('beforeend', galleryCardTpl(hits));
     // console.log(hits.length);
   }
   
   clearImagesMarkUp() {
-    return this.refs.imagesMarkup.innerHTML = '';
+    return this.refs.gallery.innerHTML = '';
   }
   
   onCatchError() {

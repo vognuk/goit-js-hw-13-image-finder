@@ -1,8 +1,5 @@
-// import { error } from "@pnotify/core";
-// import { notification } from './notification';
-
 export default class FetchImage {
-  constructor(pagesCount) { // imageRequestValue,
+  constructor(pagesCount) { 
     this.searchQuery = '';
     this.pagesCount = pagesCount;
   }

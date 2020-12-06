@@ -4,19 +4,15 @@
     box-sizing: border-box;
   }
   
-  *,
-  ::after,
-  ::before {
-    box-sizing: border-box;
-  }
-    
+*,
+::after,
+::before {
+  box-sizing: inherit;
+}
 
 body {
   padding-top: 15px;
-  // background-image: url(../src/images/bg-pattern.png);
-  // background-repeat: no-repeat;
-  // background-attachment: fixed;
-  // background-size: 25%; 
+  font-family: Roboto;
 }
 
 main {
@@ -33,4 +29,8 @@ a:visited {
 
 li {
   list-style-type: none;
+}
+
+h1 {
+  font-size: 48px;
 }

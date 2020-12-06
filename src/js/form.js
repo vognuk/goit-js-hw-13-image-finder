@@ -28,7 +28,7 @@ search.addEventListener('click', () => {
   }
 })
 
-overlay2.addEventListener('click', (e) => {
+overlay2.addEventListener('click', (event) => {
   input.value = '';
   input.focus();
   search.classList.remove('searching');
@@ -36,8 +36,8 @@ overlay2.addEventListener('click', (e) => {
   input.classList.toggle('input__animation');
 })
 
-document.body.addEventListener('click', (e) => {
-  if (!search.contains(e.target) && input.value.length === 0) {
+document.body.addEventListener('click', (event) => {
+  if (!search.contains(event.target) && input.value.length === 0) {
     search.classList.remove('active');
     search.classList.remove('searching');
     input.value  = '';
@@ -45,8 +45,8 @@ document.body.addEventListener('click', (e) => {
   }
 })
 
-input.addEventListener('keyup', (e) => {
-  if (e.keyCode === 13) {
+input.addEventListener('keyup', (event) => {
+  if (event.keyCode === 13) {
     input.blur();
   }
 })
