@@ -30,20 +30,25 @@
     <main>
       <section class="gallery__block">
         <div class="gallery__wrapper">
-          <ul class="gallery" data-infinite-scroll='{ "path": ".pagination__next", "append": ".post", "history": false }'>
+          <ul class="gallery" > 
+            <!-- data-infinite-scroll='{ "path": ".pagination__next", "append": ".post", "history": false }' -->
             <!-- Список <li> с карточками изображений -->
           </ul>
         </div>
-      <div class="scrollup">
-        <!-- Иконка fa-chevron-up (Font Awesome) -->
-        <i class="fa fa-chevron-up"></i>
-      </div>
+        <button class="gallery__load-more-btn" type="button" data-load-more>
+          <p>
+            Load more...
+          </p>
+        </button>
+       
+
       </section>
 
     </main>
     <footer>
       
     </footer>
+    <!-- <script src="/path/to/infinite-scroll.pkgd.min.js"></script> -->
   </body>
 </html>
  

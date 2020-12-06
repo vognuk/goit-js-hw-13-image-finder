@@ -1,6 +1,6 @@
 export default [
     {
-        pagesCount: 1,
+        pagesCount: 0,
         searchValue: "",
     }
 ]
